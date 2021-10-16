@@ -23,7 +23,7 @@ export default class Demo extends engine.View {
     this.player = new Player(this.materialWorld.material); //instance du joueur
 
     this.mobs = [ //instances des mobs
-      new Mob(assets.mob, this.materialMob.material, 10, 0, 0)
+      new Mob(assets.mob, this.materialMob.material, 5, 0, 0, this.materialWorld.material)
     ]
 
     this.scene.add(this.world.root); //on ajoute l'object 3D du niveau à la scene
@@ -38,7 +38,7 @@ export default class Demo extends engine.View {
       this.mobs[i].update(dt, this.world, this.player); // processus des mobs
     }
 
-    //this.camera.root.lookAt(this.mobs[0].root.position); //Seulement si pas de casque
+    this.camera.root.lookAt(this.mobs[0].root.position); //Seulement si pas de casque
 
     this.player.update(dt, this.controllerRight, this.controllerLeft, this.inputs, this.mobs, this.world, this.camera);//processus joueur
   }

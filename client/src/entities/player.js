@@ -39,8 +39,8 @@ export default class Player {
       this.updatePosition(dt, world, camera); //processus de déplacement
     }
 
-    if (controllerRight.userData.speed > 1.2) {
-      this.updateHit(dt, mobs, controllerRight.userData.speed); //processus d'attaque
+    if (controllerRight.userData.speed > 2) {
+      this.updateHit(dt, mobs, controllerRight.userData.speed, controllerRight.userData.direction  ); //processus d'attaque
     }
   }
 
@@ -81,10 +81,10 @@ export default class Player {
     }
   }
 
-  updateHit(dt, mobs, speed) { //processus en cas de frappe du joueur
+  updateHit(dt, mobs, speed, direction) { //processus en cas de frappe du joueur
     const matrix = new THREE.Matrix4().extractRotation(this.handRight.matrix); //on extrait la matrice de rotation de la main droite
-    const direction = new THREE.Vector3(0, 0, -1).applyMatrix4(matrix); //on extrait le vecteur directeur
-    this.raycasterHand.set(this.handRight.position, direction); // on met à jour la position du détecteur de collsions
+    const orientation = new THREE.Vector3(0, 0, -1).applyMatrix4(matrix); //on extrait le vecteur directeur
+    this.raycasterHand.set(this.handRight.position, orientation); // on met à jour la position du détecteur de collsions
 
     for (let i = 0; i < mobs.length; i++) { // pour chaque mob instancié
       const colliders = mobs[i].colliders; // on récupère la liste de leurs colliders
@@ -92,7 +92,7 @@ export default class Player {
       if (cols.length) { //si collision
         const touche = cols[0]; //on récupère la premiere collision
         const indexBone = colliders.indexOf(touche.object); //on récupère l'index du collider pour informer le mob touché
-        mobs[i].hurt(direction, touche.point, speed, indexBone);//on indique au mob la collision, direction d'attaque, point de collision, vitesse, index du collider
+        mobs[i].hurt(direction.normalize(), touche.point, speed, indexBone);//on indique au mob la collision, direction d'attaque, point de collision, vitesse, index du collider
       }
     }
   }
