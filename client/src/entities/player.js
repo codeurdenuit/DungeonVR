@@ -27,9 +27,12 @@ export default class Player {
     this.direction = new THREE.Vector3(); //diréction de déplacement du joueur
     this.raycasterBody = new THREE.Raycaster(new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(0, -1, 0), 0, 1); //détecteur de collision avec le niveau
     this.raycasterHand = new THREE.Raycaster(new THREE.Vector3(0.0, 0, 0), new THREE.Vector3(1.0, 0, 0), 0, 0.4); //détecteur de collision de la main droite
+
+    this.hp = 100; //point de vie du joueur
   }
 
   update(dt, controllerRight, controllerLeft, inputs, mobs, world, camera) {
+    if(this.hp <= 0) return; //un joueur mort ne peut plus intéragir
 
     this.updateHands(dt, controllerRight, controllerLeft); //processus d'affichage des mains
 
@@ -97,8 +100,20 @@ export default class Player {
     }
   }
 
-  hurt(position) { //le joueur est touché par un mob
-
+  hurt(position, world) { //le joueur est touché par un mob
+    if(this.hp <= 0) return; //un joueur mort ne peut plus être blessé
+    const shieldPos =  this.handLeft.position
+    const vectorShieldToMob = new THREE.Vector2(position.x-shieldPos.x, position.z-shieldPos.z);
+    const vectorshieldToPlayer = new THREE.Vector2(this.positionCamera.x-shieldPos.x, this.positionCamera.z-shieldPos.z);
+    const angle = vectorShieldToMob.cross(vectorshieldToPlayer); //angle entre le vecteur bouclier player et le bouclier mob
+    if(Math.abs(angle)> 0.2) { //Si angle faible, alors le bouclier est entre le joueur et le mob
+      this.hp -= 25;
+      if(this.hp>0) {
+        world.startHammer(); //tramblement de la caméra
+      } else {
+        world.gameover(); //fin de partie
+      }
+    }
   }
 
   getDistance(target) { //distance entre le joueur et un élément du jeu dans l'espace du niveau, pas dans l'espace absolue

@@ -32,9 +32,9 @@ export default class Demo extends engine.View {
     //this.eventManager = new EventManager(config); //ouverture des portes, activation des interupteurs, ramasser des clés et des armes
 
     this.mobs = [ //instances des mobs
-      new Mob(assets.mob, this.materials, 5, 0, 0),
-      new Mob(assets.mob, this.materials, 5, 0, 2),
-      new Mob(assets.mob, this.materials, 5, 0, -2)
+      new Mob(assets.mob, this.materials, 5, 0, 0)//,
+      //new Mob(assets.mob, this.materials, 5, 0, 2),
+      //new Mob(assets.mob, this.materials, 5, 0, -2)
     ]
 
     this.scene.add(this.world.root); //on ajoute l'object 3D du niveau à la scene
@@ -44,6 +44,9 @@ export default class Demo extends engine.View {
 
 
   update(dt) {
+
+    this.world.update(dt);
+
     for (let i = 0; i < this.mobs.length; i++) {
       this.mobs[i].update(dt, this.world, this.player, this.mobs); // processus des mobs
     }

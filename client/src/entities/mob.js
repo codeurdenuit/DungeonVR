@@ -78,10 +78,10 @@ export default class Mob {
     this.rotation = 0;//roation du personnage
 
     this.tempo = 0 //variablie utilisée pour décompter des durées
-    this.tempoHit = 0//temps entre l'attaque et la collision avec le joueur;
 
     this.blinded = false; //Si le mob n'as plus tête, le comportement du personnage change
     this.isDead = false; //Si le personnage est HS, pour lancer la procedure de destruction de l'instance
+    this.hitting = false; //si le mot est en train de frapper
     this.initPosition(x, y, z);
   }
 
@@ -148,7 +148,7 @@ export default class Mob {
     this.startAnimation(boneMap[boneName].anim);//animation du choc
     this.behviour = HURT;//le comportement passe en phase de choc, le perso ne peut plus bouger
     this.tempo = this.durationHurt//temps d'immobilité 
-    this.currentSpeed = 0;
+    this.currentSpeed = 0; //le personnage ne se déplace plus
     this.startAnimationBlood(point); //pour chaque coup, on un animation d'impact
     this.startAnimationBlood(point); //2 fois plus de sanf XD
     this.colliders[indexBone].userData.hp -= 25;//on retrir des points de vie au collider
@@ -173,11 +173,9 @@ export default class Mob {
           this.updateFocus(dt, player); //processus de déplacement vers le joueur
           break;
         case ATTACK:
-          console.log('--ATTACK')
-          this.updateAttack(dt, player);  //processus d'attaque
+          this.updateAttack(dt, player, world);  //processus d'attaque
           break;
         case HURT:
-          console.log('--HURT')
           this.updateHurt(dt, player); //processus de blessure
           break;
         default:
@@ -204,11 +202,14 @@ export default class Mob {
     if (this.behviour === HURT && this.tempo > 0) {
       this.tempo -= dt; //subire une attaque
       return HURT;
-    } else if (distance < this.rangeHit || this.blinded) { //si à porté ou si aveugle, le mob ne se déplace plus et attaque à l'aveugle
+    } else if ((distance < this.rangeHit || this.blinded)&& player.hp > 0) { //si à porté ou si aveugle, le mob ne se déplace plus et attaque à l'aveugle, si le joueur est en vie
+      if(this.behviour !== ATTACK) this.tempo = 0;
       return ATTACK; //attaquer le joueur;
-    } else if (distance < this.rangeWatch) {
+    } else if (distance < this.rangeWatch && player.hp > 0) { //Si a distance de vue et que le joueur est vivant
+      if(this.behviour !== FOCUS) this.tempo = 0;
       return FOCUS; //courir vers le joueur;
     } else {
+      if(this.behviour !== RANDOM) this.tempo = 0;
       return RANDOM; //déplacementd aléatoired;
     }
   }
@@ -225,36 +226,36 @@ export default class Mob {
 
   updateFocus(dt, player) {
     this.rotation = Math.atan2(-(player.positionVictualCamera.z - this.root.position.z), - (player.positionVictualCamera.x - this.root.position.x)) + Math.PI;
-
     if (this.currentSpeed !== this.speedRun) { //Si debut du focus, on active l'animation et on commence la course
       this.currentSpeed = this.speedRun;
       this.startAnimation('run');
     }
   }
 
-  updateAttack(dt, player) {
+  updateAttack(dt, player, world) {
     this.tempo -= dt;
     this.currentSpeed = 0; //le personnage ne se déplace plus
 
     if (this.tempo <= 0) { //toutes les 33ms, on change d'action de combat
-      this.tempo = this.durationHit;
+      this.tempo = this.durationHit;//durée de l'action de frappe
+      this.hitting = false;
       const prob = Math.random();  //nombre entre 0 1 pour déterminé la probabilité d'action
       if (!this.blinded)//Si le personna est aveugle, il ne change plus d'orientation
         this.rotation = Math.atan2(-(player.positionVictualCamera.z - this.root.position.z), - (player.positionVictualCamera.x - this.root.position.x)) + Math.PI; //le personnage fait face au joueur
       if (prob < this.probHit1) {
         this.startAnimation('hit1');
-        this.tempoHit = this.durationHit * 0.85; //durée avant impact
+        this.hitting = true;//le personnage vient de frapper
       } else if (prob < this.probHit2) {
         this.startAnimation('hit2');
-        this.tempoHit = this.durationHit * 0.85; //durée avant impact      
+        this.hitting = true;//le personnage vient de frapper
       } else {
         this.startAnimation('hitpause');
       }
     }
 
-    if (this.tempoHit > 0) this.tempoHit -= dt;
-    if (this.tempoHit <= 0) {
-      player.hurt(this.worldPosition); //on attack le jouer et on indique la position du coup pour savoir si le bouclier peut parer 
+    if (this.tempo < this.durationHit/2 && this.hitting) {  //si animation arrrive à 50% et que le personnage frappe
+      player.hurt(this.worldPosition, world); //on frappe le joueur et on indique la position de l'attaquant pour savoir si le bouclier peut parer 
+      this.hitting = false;//Le personnage a touché le joueur, l'animation doit encore se terminer
     }
   }
 
@@ -281,8 +282,6 @@ export default class Mob {
 
     this.root.position.x += dx; //distance parcourue x
     this.root.position.z += dz; //distance parcourue z
-
-
 
     this.root.updateWorldMatrix(); //mise à jour de la matrice world pour récupérer la position absolue
     this.worldPosition.setFromMatrixPosition(this.root.matrixWorld); // mise a jour de la position absolue
