@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export default class Camera {
 
   constructor(x, y, z, target) {
-    this.root = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); //creation de l'object camera
+    this.root = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 20); //creation de l'object camera
     this.root.position.set(x, y, z); //initialisation de la position
 
   }

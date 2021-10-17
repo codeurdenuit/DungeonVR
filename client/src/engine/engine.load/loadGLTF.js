@@ -17,10 +17,12 @@ function loadGLTF(path) {
                 assets[child.name].geometry = child.geometry;
                 assets[child.name].skeleton = child.skeleton;
                 assets[child.name].animations = gltf.animations;
+                assets[child.name].geometry.setAttribute('uv2', new THREE.BufferAttribute(assets[child.name].geometry.getAttribute("uv").array, 2));//for LightMap
                 break;
               case 'Mesh':
                 assets[child.name] = {};
                 assets[child.name].geometry = child.geometry;
+                assets[child.name].geometry.setAttribute('uv2', new THREE.BufferAttribute(assets[child.name].geometry.getAttribute("uv").array, 2));//for LightMap
                 break;
             }
             if (child.type === 'Object3D') {

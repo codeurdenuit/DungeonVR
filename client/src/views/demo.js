@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import engine from '../engine';
 
-import MaterialMob from '../materials/mob';
-import MaterialWorld from '../materials/world';
+import MaterialMorphSkin from '../materials/materialMorphSkin';
+import MaterialRigid from '../materials/materialRigid';
+import MaterialMorph from '../materials/materialMorph';
+import MaterialInvisible from '../materials/materialInvisible';
 
 import Camera from '../entities/camera';
 import World from '../entities/world';
@@ -15,15 +17,24 @@ export default class Demo extends engine.View {
 
     this.scene = new THREE.Scene(); //instance de la scene 3D
 
-    this.materialMob = new MaterialMob(assets); //material pour les instances mobs
-    this.materialWorld = new MaterialWorld(assets);//material pour le decor et le joueur
+    const materialMorphSkin = new MaterialMorphSkin(assets); //material pour les instances mobs
+    const materialRigid = new MaterialRigid(assets);//material pour le decor et le joueur
+    const materialMorph = new MaterialMorph(assets);//material pour les impacts
+    const materialInvisible = new MaterialInvisible();//material pour les colliders
 
-    this.world = new World(assets.level, this.materialWorld.material); //instance du niveau
+    this.materials = { materialMorphSkin, materialRigid, materialMorph, materialInvisible };
+
+    this.world = new World(assets.level, this.materials); //instance du niveau
     this.camera = new Camera(1, 0.5, 2); //instance de la camera
-    this.player = new Player(this.materialWorld.material); //instance du joueur
+    this.player = new Player(materialRigid); //instance du joueur
+
+    //this.mobManager = new MobManager(config, this.materials);//ajoute et supprime les instances des mobs
+    //this.eventManager = new EventManager(config); //ouverture des portes, activation des interupteurs, ramasser des clés et des armes
 
     this.mobs = [ //instances des mobs
-      new Mob(assets.mob, this.materialMob.material, 5, 0, 0, this.materialWorld.material)
+      new Mob(assets.mob, this.materials, 5, 0, 0),
+      new Mob(assets.mob, this.materials, 5, 0, 2),
+      new Mob(assets.mob, this.materials, 5, 0, -2)
     ]
 
     this.scene.add(this.world.root); //on ajoute l'object 3D du niveau à la scene
@@ -32,11 +43,13 @@ export default class Demo extends engine.View {
   }
 
 
-
   update(dt) {
     for (let i = 0; i < this.mobs.length; i++) {
-      this.mobs[i].update(dt, this.world, this.player); // processus des mobs
+      this.mobs[i].update(dt, this.world, this.player, this.mobs); // processus des mobs
     }
+
+    //this.mobManager.update(dt, this.world, this.player); //ajoute et supprime les mobs
+    //this.eventManager.update(dt, this.world, this.player);
 
     this.camera.root.lookAt(this.mobs[0].root.position); //Seulement si pas de casque
 

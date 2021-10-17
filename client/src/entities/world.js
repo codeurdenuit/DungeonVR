@@ -1,26 +1,20 @@
 import * as THREE from 'three';
-import materialCollider from '../materials/collider';
 
 export default class World {
 
-  constructor(asset, material, decor) {
-
-    this.world01 = new THREE.Mesh(asset.collider_test.geometry, material);  //mesh de test
-    //this.world01 = new THREE.Mesh(asset.world1.geometry, material);  //mesh de la première zone du décor
-    //this.world02 = new THREE.Mesh(asset.world2.geometry, material);  //mesh de la deuxième zone du décor
-    ///this.world03 = new THREE.Mesh(asset.world3.geometry, material); //mesh de la troisième zone du décor
-    //this.world04 = new THREE.Mesh(asset.world4.geometry, material); //mesh de la quatrième zone du décor
-
+  constructor(asset, materials) {
 
     this.root = new THREE.Object3D(); //Object 3D racine de cette instance
-    //this.collider = new THREE.Mesh(asset.collider.geometry, materialCollider); //création du collider
-    this.collider = new THREE.Mesh(asset.collider_test.geometry, materialCollider); //création du collider de test
-    this.colliders = [this.collider]; //liste des collider du niveau, future optimisations possibles
 
-    this.world01.geometry.setAttribute('uv2', new THREE.BufferAttribute(this.world01.geometry.getAttribute("uv").array, 2));//for LightMap
-    //this.world02.geometry.setAttribute( 'uv2', new THREE.BufferAttribute( this.world02.geometry.getAttribute("uv").array, 2 ) );//for LightMap
-    //this.world03.geometry.setAttribute( 'uv2', new THREE.BufferAttribute( this.world03.geometry.getAttribute("uv").array, 2 ) );//for LightMap
-    //this.world04.geometry.setAttribute( 'uv2', new THREE.BufferAttribute( this.world04.geometry.getAttribute("uv").array, 2 ) );//for LightMap
+    this.world01 = new THREE.Mesh(asset.collider_test.geometry, materials.materialRigid.material);  //mesh de test
+    //this.world01 = new THREE.Mesh(asset.world1.geometry, materials.materialRigid.material);  //mesh de la première zone du décor
+    //this.world02 = new THREE.Mesh(asset.world2.geometry, materials.materialRigid.material);  //mesh de la deuxième zone du décor
+    //this.world03 = new THREE.Mesh(asset.world3.geometry, materials.materialRigid.material); //mesh de la troisième zone du décor
+    //this.world04 = new THREE.Mesh(asset.world4.geometry, materials.materialRigid.material); //mesh de la quatrième zone du décor
+
+    //this.collider = new THREE.Mesh(asset.collider.geometry, materials.materialInvisible.material); //création du collider
+    this.collider = new THREE.Mesh(asset.collider_test.geometry, materials.materialInvisible.material); //création du collider de test
+    this.colliders = [this.collider]; //liste des collider du niveau, future optimisations possibles
 
     this.root.add(new THREE.AmbientLight(0x999999 /*0x000000*/)); //lumière minimum
     this.root.add(this.world01);

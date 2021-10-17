@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 export default class Player {
 
-  constructor(material, camera) {
+  constructor(materialRigid, camera) {
     this.root = new THREE.Object3D();  //Object 3D racine de cette instance
     this.root.matrixAutoUpdate = false; //Object ne va jamais se déplacer
 
@@ -11,8 +11,8 @@ export default class Player {
     const geometryHandRight = new THREE.BoxGeometry(0.06, 0.1, 0.4); //geométrie utilisée pour représenter la main droite du joueur
     geometryHandRight.translate(0, 0, -0.2); //modification du centre de gravité de la géométrie pour symboliser une épée
 
-    this.handLeft = new THREE.Mesh(geometryHandLeft, material); //création du mesh de la main gauche
-    this.handRight = new THREE.Mesh(geometryHandRight, material); //création du mesh de la main droite
+    this.handLeft = new THREE.Mesh(geometryHandLeft, materialRigid.material); //création du mesh de la main gauche
+    this.handRight = new THREE.Mesh(geometryHandRight, materialRigid.material); //création du mesh de la main droite
 
     this.light = new THREE.PointLight(0xffffff, 1, 30, 5); //création d'une lumière omni pour éclairer le jeu
     this.handLeft.add(this.light); //la luimière est attachée à la main gauche
@@ -39,8 +39,8 @@ export default class Player {
       this.updatePosition(dt, world, camera); //processus de déplacement
     }
 
-    if (controllerRight.userData.speed > 2) {
-      this.updateHit(dt, mobs, controllerRight.userData.speed, controllerRight.userData.direction  ); //processus d'attaque
+    if (controllerRight.userData.speed > 2) {//si mouvement brutale 
+      this.updateHit(dt, mobs, controllerRight.userData.speed, controllerRight.userData.direction); //processus d'attaque
     }
   }
 
@@ -71,23 +71,23 @@ export default class Player {
     this.positionVictualCamera.z = eye.getPositionZ() + this.positionVirtual.z;
     world.setPos(this.positionVirtual); //déplacement du monde opposement à cette position virtuelle, c'est le monde qui bouge, pas le joueur
     this.raycasterBody.set(this.positionCamera, new THREE.Vector3(0, -1, 0));
-    const col = this.raycasterBody.intersectObjects(world.colliders); // On vérifie que le joeur est toujours dans les limites autorisées du décor
+    const col = this.raycasterBody.intersectObjects(world.colliders); //on vérifie que le joeur est toujours dans les limites autorisées du décor
     if (!col.length) { //si pas de collision avec le sol
       this.positionVirtual.x -= this.direction.x * distance; //rollback de la position virtuelle
       this.positionVirtual.z -= this.direction.z * distance;
       world.setPos(this.positionVirtual); //rollback de la position du décor
     } else {
-      this.positionVirtual.y += col[0].point.y; // si déplacement authorisé, on corrige l'écart de heuteur entre le sol du niveau et le raycaster toujours centré à zero
+      this.positionVirtual.y += col[0].point.y; //si déplacement authorisé, on corrige l'écart de heuteur entre le sol du niveau et le raycaster toujours centré à zero
     }
   }
 
   updateHit(dt, mobs, speed, direction) { //processus en cas de frappe du joueur
     const matrix = new THREE.Matrix4().extractRotation(this.handRight.matrix); //on extrait la matrice de rotation de la main droite
     const orientation = new THREE.Vector3(0, 0, -1).applyMatrix4(matrix); //on extrait le vecteur directeur
-    this.raycasterHand.set(this.handRight.position, orientation); // on met à jour la position du détecteur de collsions
+    this.raycasterHand.set(this.handRight.position, orientation); //on met à jour la position du détecteur de collsions
 
-    for (let i = 0; i < mobs.length; i++) { // pour chaque mob instancié
-      const colliders = mobs[i].colliders; // on récupère la liste de leurs colliders
+    for (let i = 0; i < mobs.length; i++) { //pour chaque mob instancié
+      const colliders = mobs[i].colliders; //on récupère la liste de leurs colliders
       const cols = this.raycasterHand.intersectObjects(colliders); //on vérifié si il y a collision
       if (cols.length) { //si collision
         const touche = cols[0]; //on récupère la premiere collision
@@ -101,7 +101,7 @@ export default class Player {
 
   }
 
-  getDistance(target) { // distance entre le joueur et un élément du jeu dans l'espace du niveau, pas dans l'espace absolue
+  getDistance(target) { //distance entre le joueur et un élément du jeu dans l'espace du niveau, pas dans l'espace absolue
     const dX = Math.abs(this.positionVictualCamera.x - target.x);
     const dZ = Math.abs(this.positionVictualCamera.z - target.z);
     return Math.sqrt(dX * dX + dZ * dZ);
