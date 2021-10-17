@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 
-
 export default class Player {
 
   constructor(materialRigid, camera) {
@@ -21,7 +20,7 @@ export default class Player {
     this.root.add(this.handRight);
 
     this.walkSeed = 3; //vitesse de déplacement du joueur
-    this.positionVirtual = new THREE.Vector3();  //position virtuelle du joueur, dans le repère absolue, le joueur ne se déplace pas
+    this.positionVirtual = new THREE.Vector3();  //position virtuelle du joueur, dans le repère du niveau, le joueur ne se déplace pas
     this.positionVictualCamera = new THREE.Vector3(0, 0, 0);//position virtuelle avec prise en compte du déplacement du casque VR, 0.5=> utilisé pour place le raycasting verticalement
     this.positionCamera = new THREE.Vector3(0, 0.5, 0);//position du casque VR dans la piece, 0.5=> utilisé pour place le raycasting verticalement
     this.direction = new THREE.Vector3(); //diréction de déplacement du joueur
