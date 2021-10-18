@@ -28,7 +28,7 @@ export default class Demo extends engine.View {
 
     this.world = new World(assets.level, this.materials); //instance du niveau
     this.camera = new Camera(1, 0.5, 2); //instance de la camera
-    this.player = new Player(materialRigid); //instance du joueur
+    this.player = new Player(materialRigid, assets.level); //instance du joueur
 
     this.mobManager = new MobManager(assets, this.materials, Mob);//ajoute et supprime les instances des mobs
     this.triggerManager = new TriggerManager(assets.level, this.materials, this.world); //ouverture des portes, activation des interupteurs, ramasser des clés et armes

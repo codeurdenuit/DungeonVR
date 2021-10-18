@@ -2,19 +2,19 @@ import * as THREE from 'three';
 
 export default class Player {
 
-  constructor(materialRigid, camera) {
+  constructor(materialRigid, assets) {
     this.root = new THREE.Object3D();  //Object 3D racine de cette instance
     this.root.matrixAutoUpdate = false; //Object ne va jamais se déplacer
 
-    const geometryHandLeft = new THREE.BoxGeometry(0.1, 0.1, 0.1); //geométrie utilisée pour représenter la main gauche du joueur
-    const geometryHandRight = new THREE.BoxGeometry(0.06, 0.1, 0.4); //geométrie utilisée pour représenter la main droite du joueur
-    geometryHandRight.translate(0, 0, -0.2); //modification du centre de gravité de la géométrie pour symboliser une épée
+    this.handLeft = new THREE.Mesh(assets.shield.geometry, materialRigid.material); //création du mesh de la main gauche
+    this.handRight = new THREE.Mesh(assets.sword.geometry, materialRigid.material); //création du mesh de la main droite
+    this.lantern = new THREE.Mesh(assets.lantern.geometry, materialRigid.material);
 
-    this.handLeft = new THREE.Mesh(geometryHandLeft, materialRigid.material); //création du mesh de la main gauche
-    this.handRight = new THREE.Mesh(geometryHandRight, materialRigid.material); //création du mesh de la main droite
+    this.lantern.position.y = -0.35;
+    this.handLeft.add(this.lantern);
 
     this.light = new THREE.PointLight(0xffffff, 1, 30, 5); //création d'une lumière omni pour éclairer le jeu
-    this.handLeft.add(this.light); //la luimière est attachée à la main gauche
+    this.lantern.add(this.light); //la luimière est attachée à la main gauche
 
     this.root.add(this.handLeft); //les meshs sont attachée à l'objet root
     this.root.add(this.handRight);
@@ -52,6 +52,7 @@ export default class Player {
     this.handRight.rotateX(Math.PI / 6);  //oriention de l'épee de la main droite
     this.handLeft.position.copy(controllerLeft.position); //on récupére la positon de la main gauche
     this.handLeft.rotation.copy(controllerLeft.rotation); //on récupére l'orientation de la main gauche
+    this.lantern.lookAt(new THREE.Vector3(0, 0, -10));  //lanterne toujours horizontale
   }
 
   updatePositionByCamera(eye) { //Prise en compte des mouvements du casque
