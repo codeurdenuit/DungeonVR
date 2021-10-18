@@ -294,7 +294,7 @@ export default class Mob {
     this.worldPosition.setFromMatrixPosition(this.root.matrixWorld); // mise a jour de la position absolue
     this.worldPosition.y += 0.5 //offest for raycaseter
     this.raycasterBody.set(this.worldPosition, new THREE.Vector3(0, -1, 0)); //mise a jour du raycaster avec la nouvelle position absolue
-    const col = this.raycasterBody.intersectObjects(world.colliders); //détection de la collision avec le sol
+    const col = this.raycasterBody.intersectObject(world.colliderMaster); //détection de la collision avec le sol
 
     if (!col.length) {  //si hors jeu, on rollback la position du personnage
       this.root.position.x -= dx;

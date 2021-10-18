@@ -37,7 +37,7 @@ export default class Player {
 
     this.updatePositionByCamera(camera, world);
 
-    if (inputs.leftButton2) {
+    if (inputs.rightButton2) {
       this.updatePosition(dt, world, camera); //processus de déplacement
     }
 
@@ -63,9 +63,10 @@ export default class Player {
 
 
   updatePosition(dt, world, eye) { //simulation du déplacement du joueur
-    const distance = this.walkSeed * dt; //distance parcourue
-    this.direction.x = this.handLeft.position.x - eye.getPositionX(); //direction de déplacement en fonction de la positon de la main gauche par rapport au regard
-    this.direction.z = this.handLeft.position.z - eye.getPositionZ();
+    this.direction.x = this.handRight.position.x - eye.getPositionX(); //direction de déplacement en fonction de la positon de la main droite par rapport au regard
+    this.direction.z = this.handRight.position.z - eye.getPositionZ();
+    const power = this.direction.length()/0.5;
+    const distance = this.walkSeed * dt * power; //distance parcourue
     this.direction.normalize(); //normalisaition du vecteur
     this.positionVirtual.x += this.direction.x * distance; //mise à jour de la position virtuelle du joueur
     this.positionVirtual.z += this.direction.z * distance;
@@ -73,7 +74,7 @@ export default class Player {
     this.positionVictualCamera.z = eye.getPositionZ() + this.positionVirtual.z;
     world.setPos(this.positionVirtual); //déplacement du monde opposement à cette position virtuelle, c'est le monde qui bouge, pas le joueur
     this.raycasterBody.set(this.positionCamera, new THREE.Vector3(0, -1, 0));
-    const col = this.raycasterBody.intersectObjects(world.colliders); //on vérifie que le joeur est toujours dans les limites autorisées du décor
+    const col = this.raycasterBody.intersectObject(world.colliderMaster); //on vérifie que le joeur est toujours dans les limites autorisées du décor
     if (!col.length) { //si pas de collision avec le sol
       this.positionVirtual.x -= this.direction.x * distance; //rollback de la position virtuelle
       this.positionVirtual.z -= this.direction.z * distance;
@@ -90,7 +91,7 @@ export default class Player {
 
     for (let i = 0; i < mobs.length; i++) { //pour chaque mob instancié
       const colliders = mobs[i].colliders; //on récupère la liste de leurs colliders
-      const cols = this.raycasterHand.intersectObjects(colliders); //on vérifié si il y a collision
+      const cols = this.raycasterHand.intersectObjects(colliders, false, ); //on vérifié si il y a collision
       if (cols.length) { //si collision
         const touche = cols[0]; //on récupère la premiere collision
         const indexBone = colliders.indexOf(touche.object); //on récupère l'index du collider pour informer le mob touché
