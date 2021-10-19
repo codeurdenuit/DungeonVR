@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 
+const geometryCollier = new THREE.BoxGeometry();
+geometryCollier.scale(0.5, 0.5, 0.1); //utiliser pour détecter les frappes de l'épee sur le bouclier
+
 export default class Player {
 
-  constructor(materialRigid, assets) {
+  constructor(materialRigid, assets, materialInvisible) {
     this.root = new THREE.Object3D();  //Object 3D racine de cette instance
     this.root.matrixAutoUpdate = false; //Object ne va jamais se déplacer
 
@@ -28,9 +31,12 @@ export default class Player {
     this.raycasterHand = new THREE.Raycaster(new THREE.Vector3(0.0, 0, 0), new THREE.Vector3(1.0, 0, 0), 0, 0.4); //détecteur de collision de la main droite
 
     this.hp = 100; //point de vie du joueur
+    this.colliderShield = new THREE.Mesh(geometryCollier, materialInvisible.material);//aucun utilisé, juste pour le fun XD
+    this.handLeft.add(this.colliderShield);
+    this.previousSpeed = 0;//utiliser pour ne jouer le son de l'épée qu'en début de mouvement.
   }
 
-  update(dt, controllerRight, controllerLeft, inputs, mobs, world, camera) {
+  update(dt, controllerRight, controllerLeft, inputs, mobs, world, camera, soundManager) {
     if(this.hp <= 0) return; //un joueur mort ne peut plus intéragir
 
     this.updateHands(dt, controllerRight, controllerLeft); //processus d'affichage des mains
@@ -41,8 +47,14 @@ export default class Player {
       this.updatePosition(dt, world, camera); //processus de déplacement
     }
 
-    if (controllerRight.userData.speed > 2) {//si mouvement brutale 
-      this.updateHit(dt, mobs, controllerRight.userData.speed, controllerRight.userData.direction); //processus d'attaque
+    if (controllerRight.userData.weaponSpeed > 8) {//si mouvement brutale, je n'utilise pas l'accélération car instable
+      if(this.previousSpeed === 0) { //si debut d'accélération alors le son est joué.
+        this.previousSpeed = controllerRight.userData.weaponSpeed; //mise à jour de la variable afin d'éviter de relancer le son au cours du mouvement
+        soundManager.playSword();
+      }
+      this.updateHit(dt, mobs, controllerRight.userData.weaponSpeed, controllerRight.userData.weaponDirection, soundManager); //processus d'attaque
+    }else {
+      this.previousSpeed = 0; //Si vitesse de l'arme trop faible, vitesse concidérée comme nulle.
     }
   }
 
@@ -85,7 +97,7 @@ export default class Player {
     }
   }
 
-  updateHit(dt, mobs, speed, direction) { //processus en cas de frappe du joueur
+  updateHit(dt, mobs, speed, direction, soundManager) { //processus en cas de frappe du joueur
     const matrix = new THREE.Matrix4().extractRotation(this.handRight.matrix); //on extrait la matrice de rotation de la main droite
     const orientation = new THREE.Vector3(0, 0, -1).applyMatrix4(matrix); //on extrait le vecteur directeur
     this.raycasterHand.set(this.handRight.position, orientation); //on met à jour la position du détecteur de collsions
@@ -96,12 +108,17 @@ export default class Player {
       if (cols.length) { //si collision
         const touche = cols[0]; //on récupère la premiere collision
         const indexBone = colliders.indexOf(touche.object); //on récupère l'index du collider pour informer le mob touché
-        mobs[i].hurt(direction.normalize(), touche.point, speed, indexBone);//on indique au mob la collision, direction d'attaque, point de collision, vitesse, index du collider
+        mobs[i].hurt(direction.normalize(), touche.point, speed, indexBone, soundManager);//on indique au mob la collision, direction d'attaque, point de collision, vitesse, index du collider
       }
+    }
+
+    const col = this.raycasterHand.intersectObject(this.colliderShield, false ); // Si le joueur frappe son bouclier
+    if (col.length) {
+      soundManager.playShield();
     }
   }
 
-  hurt(position, world) { //le joueur est touché par un mob
+  hurt(position, world, soundManager) { //le joueur est touché par un mob
     if(this.hp <= 0) return; //un joueur mort ne peut plus être blessé
     const shieldPos =  this.handLeft.position
     const vectorShieldToMob = new THREE.Vector2(position.x-shieldPos.x, position.z-shieldPos.z);
@@ -114,6 +131,9 @@ export default class Player {
       } else {
         world.gameover(); //fin de partie
       }
+      soundManager.playHurtPlayer();
+    } else {
+      soundManager.playShield();
     }
   }
 

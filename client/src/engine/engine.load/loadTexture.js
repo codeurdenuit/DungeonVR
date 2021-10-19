@@ -22,7 +22,7 @@ function loadTexture(path) {
         resolve(texture);
       },
       undefined, function (err) {
-        console.error(e);
+        console.error(err);
       });
   });
 }

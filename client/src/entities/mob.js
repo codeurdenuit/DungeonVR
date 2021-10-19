@@ -140,7 +140,7 @@ export default class Mob {
     }
   }
 
-  hurt(direction, point, speed, indexBone) {
+  hurt(direction, point, speed, indexBone, soundManager) {
     if (this.isDead) return //si le personnage est mort, on ne peut plus le toucher
     if (this.colliders[indexBone].userData.hp <= 0) return //si la zone est déjà détruite, le coup est ignoré
     if (this.behviour === HURT & this.tempo > this.durationHurt / 2) return //si le personnage est déjà en train de subir des dégàts, le coup est ignoré, sauf après 1/2 du temps d'immobilité
@@ -152,6 +152,7 @@ export default class Mob {
     this.startAnimationBlood(point); //pour chaque coup, on un animation d'impact
     this.colliders[indexBone].userData.hp -= 25;//on retrir des points de vie au collider
     if (this.colliders[indexBone].userData.hp === 0) {
+      soundManager.playCutmob();
       this.startAnimationBodyPart(boneName, direction, speed) //Si colliders HS, on déclanche l'animation de démembrement 
       if (boneName === 'spine03'){
         this.blinded = true;
@@ -160,10 +161,12 @@ export default class Mob {
       if (boneName === 'spine02' || boneName === 'spine01') {
         this.isDead = true; //pour indiquer au processus que le comportement du personnage est désactivé
       }
+    } else {
+      soundManager.playHurtmob();
     }
   }
 
-  update(dt, world, player, mobs) {
+  update(dt, world, player, mobs, soundManager) {
     this.behviour = this.updateBehviour(dt, player);//on détermine le comportement en cours
 
     if (!this.isDead) //si le personnage est HS, on arrete les processus de comportement. 
@@ -175,7 +178,7 @@ export default class Mob {
           this.updateFocus(dt, player); //processus de déplacement vers le joueur
           break;
         case ATTACK:
-          this.updateAttack(dt, player, world);  //processus d'attaque
+          this.updateAttack(dt, player, world, soundManager);  //processus d'attaque
           break;
         case HURT:
           this.updateHurt(dt, player); //processus de blessure
@@ -234,7 +237,7 @@ export default class Mob {
     }
   }
 
-  updateAttack(dt, player, world) {
+  updateAttack(dt, player, world, soundManager) {
     this.tempo -= dt;
     this.currentSpeed = 0; //le personnage ne se déplace plus
 
@@ -260,7 +263,7 @@ export default class Mob {
       const diffAngle = Math.abs(this.rotation - new THREE.Vector2(player.positionCamera.x-this.worldPosition.x, player.positionCamera.z-this.worldPosition.z).angle());//erreur d'angle entre l'orientation du mob et l'orientation entre mob et joueur
       console.log("diffAngle ",diffAngle, ' distance '+distance)
       if(diffAngle<Math.PI/6 && distance<this.rangeHit) { //si joueur à porté et face au mob
-        player.hurt(this.worldPosition, world); //on frappe le joueur et on indique la position de l'attaquant pour savoir si le bouclier peut parer 
+        player.hurt(this.worldPosition, world, soundManager); //on frappe le joueur et on indique la position de l'attaquant pour savoir si le bouclier peut parer 
       }
       this.hitting = false;//Le personnage a touché le joueur, l'animation doit encore se terminer
     }
