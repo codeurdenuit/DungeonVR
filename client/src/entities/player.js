@@ -27,7 +27,7 @@ export default class Player {
     this.positionVictualCamera = new THREE.Vector3(0, 0, 0);//position virtuelle avec prise en compte du déplacement du casque VR, 0.5=> utilisé pour place le raycasting verticalement
     this.positionCamera = new THREE.Vector3(0, 0.5, 0);//position du casque VR dans la piece, 0.5=> utilisé pour place le raycasting verticalement
     this.direction = new THREE.Vector3(); //diréction de déplacement du joueur
-    this.raycasterBody = new THREE.Raycaster(new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(0, -1, 0), 0, 1); //détecteur de collision avec le niveau
+    this.raycasterBody = new THREE.Raycaster(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), 0, 2); //détecteur de collision avec le niveau
     this.raycasterHand = new THREE.Raycaster(new THREE.Vector3(0.0, 0, 0), new THREE.Vector3(1.0, 0, 0), 0, 0.4); //détecteur de collision de la main droite
 
     this.hp = 100; //point de vie du joueur
