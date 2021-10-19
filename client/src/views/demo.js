@@ -13,6 +13,7 @@ import Mob from '../entities/mob';
 import MobManager from '../entities/mobManager';
 import TriggerManager from '../entities/triggerManager';
 import SoundManager from '../entities/soundManager';
+import ItemManager from '../entities/itemManager';
 
 export default class Demo extends engine.View {
 
@@ -29,14 +30,13 @@ export default class Demo extends engine.View {
 
     this.camera = new Camera(1, 0.5, 2); //instance de la camera
 
-
-
     this.world = new World(assets.level, this.materials); //instance du niveau
     this.player = new Player(materialRigid, assets.level, materialInvisible); //instance du joueur
 
     this.mobManager = new MobManager(assets, this.materials, Mob);//ajoute et supprime les instances des mobs
     this.triggerManager = new TriggerManager(assets.level, this.materials, this.world); //ouverture des portes, activation des interupteurs, ramasser des clés et armes
     this.soundManager = new SoundManager(assets, this.camera);
+    this.itemManager = new ItemManager(assets.level, materialRigid, this.world);
 
     this.scene.add(this.world.root); //on ajoute l'object 3D du niveau à la scene
     this.scene.add(this.player.root); //on ajoute l'object 3D player à la scene
@@ -55,8 +55,8 @@ export default class Demo extends engine.View {
     this.player.update(dt, this.controllerRight, this.controllerLeft, this.inputs, this.mobs, this.world, this.camera, this.soundManager);//processus joueur
 
     this.mobManager.update(dt, this.mobs, this.player, this.world); //ajoute et supprime les mobs
-
     this.triggerManager.update(dt, this.mobs, this.player, this.soundManager);//gestion des interupteurs et des ouvertures
+    this.itemManager.update(dt, this.player, this.soundManager);//gestion des éléments ramassables
   }
 
 }

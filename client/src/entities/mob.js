@@ -140,7 +140,7 @@ export default class Mob {
     }
   }
 
-  hurt(direction, point, speed, indexBone, soundManager) {
+  hurt(direction, point, speed, indexBone, soundManager, weaponIndex, damage) {
     if (this.isDead) return //si le personnage est mort, on ne peut plus le toucher
     if (this.colliders[indexBone].userData.hp <= 0) return //si la zone est déjà détruite, le coup est ignoré
     if (this.behviour === HURT & this.tempo > this.durationHurt / 2) return //si le personnage est déjà en train de subir des dégàts, le coup est ignoré, sauf après 1/2 du temps d'immobilité
@@ -150,19 +150,19 @@ export default class Mob {
     this.tempo = this.durationHurt//temps d'immobilité 
     this.currentSpeed = 0; //le personnage ne se déplace plus
     this.startAnimationBlood(point); //pour chaque coup, on un animation d'impact
-    this.colliders[indexBone].userData.hp -= 25;//on retrir des points de vie au collider
-    if (this.colliders[indexBone].userData.hp === 0) {
+    this.colliders[indexBone].userData.hp -= damage;//on retrir des points de vie au collider
+    if (this.colliders[indexBone].userData.hp <= 0) {
       soundManager.playCutmob();
       this.startAnimationBodyPart(boneName, direction, speed) //Si colliders HS, on déclanche l'animation de démembrement 
-      if (boneName === 'spine03'){
+      if (boneName === 'spine03') {
         this.blinded = true;
         this.speedWalk = 0; //le personnage ne peux plus se déplacer
-      } 
+      }
       if (boneName === 'spine02' || boneName === 'spine01') {
         this.isDead = true; //pour indiquer au processus que le comportement du personnage est désactivé
       }
     } else {
-      soundManager.playHurtmob();
+      soundManager.playHurtmob(weaponIndex);
     }
   }
 
@@ -208,13 +208,13 @@ export default class Mob {
       this.tempo -= dt; //subire une attaque
       return HURT;
     } else if ((distance < this.rangeHit || (this.blinded && distance < this.rangeWatch)) && player.hp > 0) { //si à porté ou si aveugle, le mob ne se déplace plus et attaque à l'aveugle, si le joueur est en vie
-      if(this.behviour !== ATTACK) this.tempo = 0;
+      if (this.behviour !== ATTACK) this.tempo = 0;
       return ATTACK; //attaquer le joueur;
     } else if (distance < this.rangeWatch && player.hp > 0 && !this.blinded) { //si a distance de vue du joueur et que le joueur est vivant
-      if(this.behviour !== FOCUS) this.tempo = 0;
+      if (this.behviour !== FOCUS) this.tempo = 0;
       return FOCUS; //courir vers le joueur;
     } else {
-      if(this.behviour !== RANDOM) this.tempo = 0;
+      if (this.behviour !== RANDOM) this.tempo = 0;
       return RANDOM; //déplacementd aléatoired;
     }
   }
@@ -258,11 +258,10 @@ export default class Mob {
       }
     }
 
-    if (this.tempo < this.durationHit/2 && this.hitting) {  //si animation arrrive à 50% et que le personnage frappe
+    if (this.tempo < this.durationHit / 2 && this.hitting) {  //si animation arrrive à 50% et que le personnage frappe
       const distance = player.getDistance(this.root.position);
-      const diffAngle = Math.abs(this.rotation - new THREE.Vector2(player.positionCamera.x-this.worldPosition.x, player.positionCamera.z-this.worldPosition.z).angle());//erreur d'angle entre l'orientation du mob et l'orientation entre mob et joueur
-      console.log("diffAngle ",diffAngle, ' distance '+distance)
-      if(diffAngle<Math.PI/6 && distance<this.rangeHit) { //si joueur à porté et face au mob
+      const diffAngle = Math.abs(this.rotation - new THREE.Vector2(player.positionCamera.x - this.worldPosition.x, player.positionCamera.z - this.worldPosition.z).angle());//erreur d'angle entre l'orientation du mob et l'orientation entre mob et joueur
+      if (diffAngle < Math.PI / 6 && distance < this.rangeHit) { //si joueur à porté et face au mob
         player.hurt(this.worldPosition, world, soundManager); //on frappe le joueur et on indique la position de l'attaquant pour savoir si le bouclier peut parer 
       }
       this.hitting = false;//Le personnage a touché le joueur, l'animation doit encore se terminer

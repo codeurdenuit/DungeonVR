@@ -17,7 +17,7 @@ export default class MobManager {
 
     for (let i = 0; i < this.spawners.length; i++) {//on vérifie la distance de chaque spawn avec le joueur
       const spawn = this.spawners[i];
-      if (Math.abs(player.positionVirtual.x - spawn.x) < 10 && Math.abs(player.positionVirtual.z - spawn.z)) { //si le joueur arrive à moins de 10m du spanw
+      if (Math.abs(player.positionVirtual.x - spawn.x) < 10 && Math.abs(player.positionVirtual.z - spawn.z) < 10) { //si le joueur arrive à moins de 10m du spanw
         console.log('mob créé')
         const mob = new this.classMob(this.mobAsset, this.materials, spawn.x, spawn.y, spawn.z);
         world.add(mob.root)//l'object3D du mob est ajouté au niveau, pas besoin de corriger la position, le référentiel du spawn est lié au niveau et non au référentiel absolu

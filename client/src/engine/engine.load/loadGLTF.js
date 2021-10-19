@@ -22,9 +22,10 @@ function loadGLTF(path) {
               case 'Mesh':
                 assets[child.name] = {};
                 assets[child.name].geometry = child.geometry;
-                if(assets[child.name].geometry.getAttribute("uv"))
+                assets[child.name].geometry.name = child.name;
+                if (assets[child.name].geometry.getAttribute("uv"))
                   assets[child.name].geometry.setAttribute('uv2', new THREE.BufferAttribute(assets[child.name].geometry.getAttribute("uv").array, 2));//for LightMap
-                if(!assets[child.name].geometry.attributes.normals) //optilisation de la taille des fichiers, les normals ne sont pas chargées mais calculées
+                if (!assets[child.name].geometry.attributes.normals) //optilisation de la taille des fichiers, les normals ne sont pas chargées mais calculées
                   assets[child.name].geometry.computeVertexNormals();
                 break;
             }

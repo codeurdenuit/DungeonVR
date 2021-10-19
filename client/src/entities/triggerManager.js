@@ -2,10 +2,11 @@ import * as THREE from 'three';
 
 
 const machinery = [
-  { door: { mesh: 'door1', x: 19, y: 0.54, z: 0, action: 'translateZ', value: -1, duration: 2 }, trigger: { mesh: 'trigger1', x: 17.23, y: 0, z: 1.3 }, collider: 'collider_1', audio: 'playOpen1' },
-  { door: { mesh: 'door2', x: 43.6, y: -6.5, z: -8.8, action: 'rotateY', value: -Math.PI * 2 / 3, duration: 3 }, trigger: { mesh: 'trigger1', x: 44.6, y: -6.5, z: 7.26 }, collider: 'collider_2', audio: 'playOpen3' },
-  { door: { mesh: 'door3', x: 53.63, y: -4.85, z: -15, action: 'translateY', value: 2, duration: 2 }, trigger: { mesh: 'trigger1', x: 38.11, y: -6.351, z: -19 }, collider: 'collider_3', audio: 'playOpen1' },
-  { door: { mesh: 'door4', x: 76.886, y: -11.1, z: 24.43, action: 'rotateY', value: Math.PI * 2 / 3, duration: 3 }, trigger: { mesh: null, x: 75.991, y: -15.932, z: 19.135 }, collider: 'collider_4', audio: 'playOpen2' }
+  { door: { mesh: 'door1', x: 19, y: 0.54, z: 0, action: 'translateZ', value: -1, duration: 2 }, trigger: { mesh: 'trigger1', x: 21.97, y: 0, z: 0 }, collider: 'collider_1', audio: 'playOpen1' },
+  { door: { mesh: 'door2', x: 43.6, y: -6.5, z: -8.8, action: 'rotateY', value: -Math.PI * 2 / 3, duration: 3 }, trigger: { mesh: 'trigger1', x: 43.445, y: -6.6, z: 4.37325 }, collider: 'collider_2', audio: 'playOpen3' },
+  { door: { mesh: 'door3', x: 53.63, y: -4.85, z: -15, action: 'translateY', value: 2, duration: 2 }, trigger: { mesh: 'trigger1', x: 40, y: -6.6, z: -19 }, collider: 'collider_3', audio: 'playOpen1' },
+  { door: { mesh: 'door4', x: 76.886, y: -11.1, z: 24.43, action: 'rotateY', value: Math.PI * 2 / 3, duration: 3 }, trigger: { mesh: null, x: 75.991, y: -15.932, z: 19.135 }, collider: 'collider_4', audio: 'playOpen2' },
+  { trigger: { mesh: 'treasure', x: 98.133, y: -17.958, z: 64.972 }, collider: 'collider_1', audio: 'playOpen1' }
 ];
 
 export default class TriggerManager {
@@ -24,16 +25,18 @@ export default class TriggerManager {
       const doorConf = machinery[i].door;
       const triggerConf = machinery[i].trigger;
 
-      const door = new THREE.Mesh(assets[doorConf.mesh].geometry, materialRigid);//creation du mesh
-      door.position.set(doorConf.x, doorConf.y, doorConf.z);//position dans le niveau
-      world.add(door);
-      this.doors.push(door);
+      if(doorConf) {
+        const door = new THREE.Mesh(assets[doorConf.mesh].geometry, materialRigid);//creation du mesh
+        door.position.set(doorConf.x, doorConf.y, doorConf.z);//position dans le niveau
+        world.add(door);
+        this.doors.push(door);
+      } else { //si pas de porte, c'est un interrupteur de fin de partie
+        this.doors.push(null);//pour garder la logique des indexs
+      }
 
       if (triggerConf.mesh) { //si l'interrupteur est visible
         const trigger = new THREE.Mesh(assets[triggerConf.mesh].geometry, materialMorph.clone())
-        trigger.material.emissive = new THREE.Color(0x110000);
         trigger.userData.enabled = false; //éviter d'activer 2 fois le mécanisme
-        trigger.userData.blink = -1;
         trigger.position.set(triggerConf.x, triggerConf.y, triggerConf.z);//position dans le niveau
         world.add(trigger);
         this.triggers.push(trigger);
@@ -45,12 +48,14 @@ export default class TriggerManager {
         this.triggers.push(trigger);
       }
 
-
       const collider = world.mobilesColliders[machinery[i].collider]; //récupération des colliders dynamiques
       collider.position.y = -10;
       this.colliders.push(collider);
-
+    
+      if(doorConf)
       this.animations.push({ duration: doorConf.duration, tempo: 0, action: doorConf.action, value: doorConf.value, audio: machinery[i].audio });
+      else
+      this.animations.push({ audio: machinery[i].audio });  
     }
   }
 
@@ -76,11 +81,11 @@ export default class TriggerManager {
   }
 
   trigger(i) {
-    if (this.triggers[i].material)
-      this.triggers[i].material.emissive = new THREE.Color(0x000000);//arret du blink
     this.triggers[i].userData.enabled = true;
     this.colliders[i].position.y = 0;
-    this.animations[i].tempo = this.animations[i].duration;
+    if(this.animations[i].duration)
+     this.animations[i].tempo = this.animations[i].duration;
+     if(!this.doors[i]) window.location.reload(); //fin de partie
   }
 
 
@@ -93,10 +98,6 @@ export default class TriggerManager {
         if (trigger.morphTargetInfluences)
           trigger.morphTargetInfluences[0] = (anim.duration - anim.tempo) / anim.duration;
         this.doors[i][anim.action](anim.value * dt / anim.duration);
-      } else if (!trigger.userData.enabled && trigger.material) {
-        trigger.material.emissiveIntensity += trigger.userData.blink * dt; //blink
-        trigger.material.emissiveIntensity > 1 ? trigger.userData.blink = -1 : null;
-        trigger.material.emissiveIntensity < 0 ? trigger.userData.blink = 1 : null;
       }
     }
   }
