@@ -1,6 +1,6 @@
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-const prettify = false;
+const prettify = true;
 
 module.exports = {
   mode: 'development',

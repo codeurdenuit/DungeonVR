@@ -52,7 +52,6 @@ export default class SoundManager {
   }
 
   playCutmob() {
-    console.log("playCutmob")
     if (this.playerMob.isPlaying)
       this.playerMob.stop();
     const buffer = this.buffersCutMob[Math.floor(Math.random() * this.buffersCutMob.length)];
@@ -62,7 +61,6 @@ export default class SoundManager {
   }
 
   playHurtmob(index) {
-    console.log("playHurtmob")
     if (this.playerMob.isPlaying)
       this.playerMob.stop();
     this.playerMob.setBuffer(this.buffersTouchMob[index]);

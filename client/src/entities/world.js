@@ -4,12 +4,12 @@ export default class World {
 
   constructor(asset, materials) {
 
-    this.root = new THREE.Object3D(); //object 3D racine de cette instance
+    this.root = new THREE.Object3D(); //objet 3D racine de cette instance, c'est lui qui est ajouté à la scene
 
     for (let name in asset) {
       if (name.includes('world')) {
-        const worldPart = new THREE.Mesh(asset[name].geometry, materials.materialRigid.material); //zone du décor
-        this.root.add(worldPart);//ajout de la zone à l'object 3D du niveau
+        const worldPart = new THREE.Mesh(asset[name].geometry, materials.materialRigid.material); //mesh d'une zone de décor
+        this.root.add(worldPart); //ajout de chaque zone à l'objet racine du décor
       }
     }
 
@@ -19,20 +19,20 @@ export default class World {
     for (let name in asset) {
       if (name.includes('collider_')) { //ajout des colliders dynamiques
         const collider = new THREE.Mesh(asset[name].geometry, materials.materialInvisible.material);
-        this.colliderMaster.add(collider);// ajout des colliders dynamiques au collider master
-        this.mobilesColliders[name] = collider; //pour les rendre accessibles
+        this.colliderMaster.add(collider); //ajout des colliders dynamiques au collider master
+        this.mobilesColliders[name] = collider; //pour les rendre accessibles aux autres instances
       }
     }
 
     //this.root.add(new THREE.AmbientLight(0x999999 /*0x000000*/)); //lumière minimum
 
-    this.position = new THREE.Vector3();//position du niveau
-    this.hammerTempo = 0;//progression de l'animation de choc
-    this.hammerDuration = 0.2;//durée d'animation de choc
-    this.deadTempo = 0;//progression de l'animation de fin de partie
+    this.position = new THREE.Vector3(); //position du niveau
+    this.hammerTempo = 0; //progression de l'animation de choc
+    this.hammerDuration = 0.2; //durée d'animation de choc
+    this.deadTempo = 0; //progression de l'animation de fin de partie
   }
 
-  add(list) {//ajouter un élément enfant au niveau
+  add(list) { //ajouter un élément enfant au niveau
     if (Array.isArray(list)) { //si liste d'éléments
       for (let i = 0; i < list.length; i++) {
         this.root.add(list[i]);
@@ -45,9 +45,9 @@ export default class World {
   }
 
   update(dt) {
-    this.root.position.copy(this.position);//on replace le niveau à la bonne position, les animtions peuvent l'avoir déplacé
+    this.root.position.copy(this.position); //on réinitialise  le niveau à la bonne position, les animtions peuvent l'avoir déplacé
 
-    if (this.hammerTempo > 0) { //si animation de choc en cours
+    if (this.hammerTempo > 0) { //si animation de choc en cours (quand le joueur est touché, la camera vibre)
       this.hammerTempo -= dt;
       this.root.translateY(-0.1 * Math.cos(this.hammerTempo / this.hammerDuration * Math.PI / 2)); //animation sur l'axe z, 0.1 à 0
     }
@@ -58,12 +58,11 @@ export default class World {
     }
   }
 
-  setPos(position) {//positionnement relatif du niveau par rapport au joueur
-    this.position.set(-position.x, -position.y, -position.z);//mise à jour de la position du niveau
-    this.root.position.set(-position.x, -position.y, -position.z);//on déplace les meshs et les éléments enfants
-    this.colliderMaster.position.set(-position.x, -position.y, -position.z);//on déplace le collider du sol
-    //this.root.updateWorldMatrix();
-    this.colliderMaster.updateWorldMatrix(false, true);  //mise à jour de la matrice world pour les détecteurs de collision susceptible de l'utiliser
+  setPos(position) { //positionnement relatif du niveau par rapport au joueur
+    this.position.set(-position.x, -position.y, -position.z); //mise à jour de la position du niveau
+    this.root.position.set(-position.x, -position.y, -position.z); //on déplace les meshs et les éléments enfants
+    this.colliderMaster.position.set(-position.x, -position.y, -position.z); //on déplace le collider du sol
+    this.colliderMaster.updateWorldMatrix(false, true);  //mise à jour de la matrice world pour les détecteurs de collision susceptibles de l'utiliser
   }
 
   startHammer() { //déclenchement de l'animation de choc

@@ -3,11 +3,12 @@ import engine from './engine';
 
 window.addEventListener('load', async () => {
   const view = new Demo();
+
   const mob = await engine.load('assets/mob.glb');
   const level = await engine.load('assets/level.glb');
 
-  const texture = await engine.load('assets/assets.png');
-  const textureLight = await engine.load('assets/assetsLight.png');
+  const texture = await engine.load('assets/assets.png'); //texture du jeu
+  const textureLight = await engine.load('assets/assetsLight.png'); //texture luminance 
 
   const sounds = {};
   sounds.move0 = await engine.load('assets/sounds/move0.mp3');//hammer
