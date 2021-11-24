@@ -4,8 +4,7 @@ const prettify = true;
 module.exports = {
   mode: 'development',
   entry: {
-    app: './client/src/app.js',
-    style: './client/src/app.scss'
+    app: './client/src/app.js'
   },
   output: {
     path: path.resolve(__dirname, './client/.dist'),
@@ -21,19 +20,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        }
-      }, 
-      {
-        test: /\.scss$/,
-        use: [ {loader:'file-loader', options: { name: "style.css"}} , 'extract-loader', {loader:'css-loader', options: { url: false}}, 'sass-loader' ],
-      }, 
-      {
-        test: /\.html$/,
-        use: {
-          loader: 'html-loader',
-          options: {
-            minimize: prettify
-          }
         }
       }
     ]

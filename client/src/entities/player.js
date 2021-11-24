@@ -110,7 +110,7 @@ export default class Player {
     this.direction.z = this.handRight.position.z - eye.getPositionZ();
     const power = this.direction.length() / 0.7;
     const distance = way * this.walkSeed * dt * power; //distance parcourue
-    distance > 0.001 ? soundManager.playWalk() : soundManager.stopWalk();
+    distance > 0.001 ? soundManager.playWalk(power) : soundManager.stopWalk();
     this.direction.normalize(); //normalisaition du vecteur
     this.positionVirtual.x += this.direction.x * distance; //mise à jour de la position virtuelle du joueur
     this.positionVirtual.z += this.direction.z * distance;

@@ -28,7 +28,7 @@ export default class Demo extends engine.View {
 
     this.materials = { materialMorphSkin, materialRigid, materialMorph, materialInvisible };
 
-    this.camera = new Camera(1, 0.5, 2); //instance de la camera
+    this.camera = new Camera(0, 1.3, 0, new THREE.Vector3(10,1.3,0)); //instance de la camera
 
     this.world = new World(assets.level, this.materials, this.camera); //instance du niveau
     this.player = new Player(materialRigid, assets.level, materialInvisible); //instance du joueur

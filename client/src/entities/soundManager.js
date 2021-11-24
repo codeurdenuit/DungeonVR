@@ -87,10 +87,14 @@ export default class SoundManager {
     this.playerTrigger.play();
   }
 
-  playWalk() {
-    if (this.playerWalk.isPlaying) return;
-    this.playerWalk.setLoop(true);
-    this.playerWalk.play();
+  playWalk(speed) {
+    if (this.playerWalk.isPlaying) {
+      this.playerWalk.setPlaybackRate(speed+0.4);
+    }else {
+      this.playerWalk.setLoop(true);
+      this.playerWalk.setPlaybackRate(speed+0.4);
+      this.playerWalk.play();
+    }
   }
 
   stopWalk() {

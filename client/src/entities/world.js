@@ -32,6 +32,7 @@ export default class World {
     this.hammerDuration = 0.2; //durée d'animation de choc
     this.deadTempo = 0; //progression de l'animation de fin de partie
 
+    //J'ajoute ca à l'arrache, c'est très sale XD
     this.panelTuto =  new THREE.Mesh(asset.panel1.geometry, materials.materialRigid.material);
     this.panelGameover =  new THREE.Mesh(asset.panel2.geometry, materials.materialRigid.material);
     this.panelEnd =  new THREE.Mesh(asset.panel3.geometry, materials.materialRigid.material);
@@ -63,7 +64,6 @@ export default class World {
     if(this.panelTuto.parent && player.positionVictualCamera.x > 1.5) {
       this.panelTuto.removeFromParent();
       this.panelTuto.geometry.dispose();
-      this.gameover()
     }
   }
 

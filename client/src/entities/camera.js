@@ -5,7 +5,8 @@ export default class Camera {
   constructor(x, y, z, target) {
     this.root = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30); //création de l'objet camera
     this.root.position.set(x, y, z); //initialisation de la position de la camera
-
+    if(target)
+      this.root.lookAt(target);
   }
 
   getPositionX() {
