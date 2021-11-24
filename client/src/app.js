@@ -6,11 +6,11 @@ window.addEventListener('load', async () => {
 
   const mob = await engine.load('assets/mob.glb');
   const level = await engine.load('assets/level.glb');
-
-  const texture = await engine.load('assets/assets.jpg'); //texture du jeu
+  const texture = await engine.load('assets/assets.jpg'); //texture color
   const textureLight = await engine.load('assets/assetsLight.png'); //texture luminance 
-
   const sounds = {};
+
+  //TODO stack all audio files in one file
   sounds.move0 = await engine.load('assets/sounds/move0.mp3');//hammer
   sounds.move1 = await engine.load('assets/sounds/move1.mp3');//sword
   sounds.move5 = await engine.load('assets/sounds/move5.mp3');//stick
@@ -25,8 +25,8 @@ window.addEventListener('load', async () => {
   sounds.chocShield0 = await engine.load('assets/sounds/chocShield0.mp3');
   sounds.chocPlayer0 = await engine.load('assets/sounds/chocPlayer0.mp3');
   sounds.chocPlayer1 = await engine.load('assets/sounds/chocPlayer1.mp3');
-  sounds.takeWeapon = await engine.load('assets/sounds/take1.mp3');////take item
-  sounds.walk0 = await engine.load('assets/sounds/walk0.mp3');////take item
+  sounds.takeWeapon = await engine.load('assets/sounds/take1.mp3');//take item
+  sounds.walk0 = await engine.load('assets/sounds/walk0.mp3');//take item
 
   const assets = { mob, level, texture, textureLight, sounds };
 

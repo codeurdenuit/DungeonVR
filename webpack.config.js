@@ -1,5 +1,4 @@
 const path = require('path');
-const { VueLoaderPlugin } = require('vue-loader');
 const prettify = true;
 
 module.exports = {
@@ -36,23 +35,10 @@ module.exports = {
             minimize: prettify
           }
         }
-      },
-      {
-        test: /\.vue$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'vue-loader',
-          options: {
-            prettify: prettify,
-          }
-        }
       }
     ]
   },
   plugins: [
-    new VueLoaderPlugin(),
-    /*new MiniCssExtractPlugin({
-      filename: "style.css"
-    }),*/
+
   ]
 }

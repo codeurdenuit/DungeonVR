@@ -14,7 +14,6 @@ app.get('/', function (req, res) {
   res.render('index.ejs');
 });
 
-
-http.createServer(app).listen(3000, function () {
-  console.info("[Express] server listening on port " + 3000);
+http.createServer(app).listen(config.port, function () {
+  console.info('[Express] server listening on port ' + config.port);
 });
