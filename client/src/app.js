@@ -7,7 +7,7 @@ window.addEventListener('load', async () => {
   const mob = await engine.load('assets/mob.glb');
   const level = await engine.load('assets/level.glb');
 
-  const texture = await engine.load('assets/assets.png'); //texture du jeu
+  const texture = await engine.load('assets/assets.jpg'); //texture du jeu
   const textureLight = await engine.load('assets/assetsLight.png'); //texture luminance 
 
   const sounds = {};

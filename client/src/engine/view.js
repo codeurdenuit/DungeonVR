@@ -46,11 +46,11 @@ class View {
       this.controllerRight.userData.weaponDirection = new THREE.Vector3();
       this.weaponSensor = new THREE.Object3D(); //on ajoute un object3D à l'extrémité du controlleur pour mesurer la vitesse et l'acc de l'arme.
       this.weaponSensor.position.z = 1;//celui-ci est éloigner pour prendre en compte la vitesse de rotation.
-      this.controllerRight.add( this.weaponSensor);
+      this.controllerRight.add(this.weaponSensor);
 
       const reducer = (previousValue, currentValue) => previousValue + currentValue;
       this.weaponSpeedList = []; //il y a trop de bruit dans les mesures, je dois lisser avant de récupérer une valeur de vitesse. 
-      
+
       this.renderer.setAnimationLoop(() => {
         const dt = this.clock.getDelta();
         this.controllerRight.userData.direction.subVectors(this.controllerRight.position, this._contollers.rightPreviousPos);
@@ -64,14 +64,14 @@ class View {
         const weaponPos = this.weaponSensor.getWorldPosition(new THREE.Vector3()); //position de l'arme dans l'espace absolu
         this.controllerRight.userData.weaponDirection.subVectors(weaponPos, this._contollers.weaponPreviousPos); //direction du mouvement de l'arme
 
-        let weaponSpeed = this.controllerRight.userData.weaponDirection.length()/dt; //vitesse durant cette frame
+        let weaponSpeed = this.controllerRight.userData.weaponDirection.length() / dt; //vitesse durant cette frame
 
         this.weaponSpeedList.push(weaponSpeed); //on moyenne la vitesse avec les 5 dernières afin d'avoir une progression propre.
-        if(this.weaponSpeedList.length > 5)this.weaponSpeedList.shift(); //Jamais plus de 5
-        weaponSpeed = this.weaponSpeedList.reduce(reducer)/this.weaponSpeedList.length;
+        if (this.weaponSpeedList.length > 5) this.weaponSpeedList.shift(); //Jamais plus de 5
+        weaponSpeed = this.weaponSpeedList.reduce(reducer) / this.weaponSpeedList.length;
 
-        const weaponAcc = (weaponSpeed-this.controllerRight.userData.weaponSpeed) //accélération de l'arme pour cette frame
-        this.controllerRight.userData.weaponSpeed = weaponSpeed; 
+        const weaponAcc = (weaponSpeed - this.controllerRight.userData.weaponSpeed) //accélération de l'arme pour cette frame
+        this.controllerRight.userData.weaponSpeed = weaponSpeed;
         this.controllerRight.userData.weaponAcc = weaponAcc;
         this._contollers.weaponPreviousPos.copy(weaponPos);
         this.render();

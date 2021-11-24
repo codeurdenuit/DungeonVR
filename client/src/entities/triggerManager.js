@@ -56,6 +56,8 @@ export default class TriggerManager {
         this.animations.push({ duration: doorConf.duration, tempo: 0, action: doorConf.action, value: doorConf.value, audio: machinery[i].audio });
       else //ajout d'un son à déclencher lors de l'activation d'une porte ou d'un passage
         this.animations.push({ audio: machinery[i].audio });
+
+      this.world = world;
     }
   }
 
@@ -85,7 +87,7 @@ export default class TriggerManager {
     this.colliders[i].position.y = 0; //la surface dynamique de déplacement est placée de façon à laisser le joueur passer.
     if(this.animations[i].duration) //si durée d'animation d'ouverture du passage
      this.animations[i].tempo = this.animations[i].duration;
-    if(!this.doors[i]) window.location.reload(); //si pas de géométrie, fin de la partie (c'est vraiment fait à l'arrache)
+    if(!this.doors[i]) this.world.win(); //si pas de géométrie, fin de la partie
   }
 
 

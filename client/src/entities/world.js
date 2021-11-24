@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+//import { HTMLMesh } from '../engine/engine.plugin/HTMLMesh';
 
 export default class World {
 
-  constructor(asset, materials) {
+  constructor(asset, materials, camera) {
 
     this.root = new THREE.Object3D(); //objet 3D racine de cette instance, c'est lui qui est ajouté à la scene
 
@@ -30,6 +31,13 @@ export default class World {
     this.hammerTempo = 0; //progression de l'animation de choc
     this.hammerDuration = 0.2; //durée d'animation de choc
     this.deadTempo = 0; //progression de l'animation de fin de partie
+
+    this.panelTuto =  new THREE.Mesh(asset.panel1.geometry, materials.materialRigid.material);
+    this.panelGameover =  new THREE.Mesh(asset.panel2.geometry, materials.materialRigid.material);
+    this.panelEnd =  new THREE.Mesh(asset.panel3.geometry, materials.materialRigid.material);
+    this.panelTuto.position.set( 2.0, 1.5, 0 );
+    this.root.add( this.panelTuto );
+    this.camera = camera;
   }
 
   add(list) { //ajouter un élément enfant au niveau
@@ -44,7 +52,7 @@ export default class World {
     }
   }
 
-  update(dt) {
+  update(dt, player) {
     this.root.position.copy(this.position); //on réinitialise  le niveau à la bonne position, les animtions peuvent l'avoir déplacé
 
     if (this.hammerTempo > 0) { //si animation de choc en cours (quand le joueur est touché, la camera vibre)
@@ -52,9 +60,10 @@ export default class World {
       this.root.translateY(-0.1 * Math.cos(this.hammerTempo / this.hammerDuration * Math.PI / 2)); //animation sur l'axe z, 0.1 à 0
     }
 
-    if (this.deadTempo > 0) { //si animation de fin de partie
-      this.deadTempo -= dt;
-      this.position.y = 1.3 * (1 - this.deadTempo / this.hammerDuration); //animation sur l'axe z, 0 à -1.3
+    if(this.panelTuto.parent && player.positionVictualCamera.x > 1.5) {
+      this.panelTuto.removeFromParent();
+      this.panelTuto.geometry.dispose();
+      this.gameover()
     }
   }
 
@@ -70,6 +79,23 @@ export default class World {
   }
 
   gameover() {  //déclenchement de l'animation de fin de partie
-    this.deadTempo = this.hammerDuration;
+    this.hammerTempo = this.hammerDuration;
+    const ref = new THREE.Object3D();
+    this.camera.root.add(ref);
+    ref.position.set(0,0,-1);
+    ref.rotation.y = Math.PI/2;
+    this.root.parent.add(this.panelGameover);
+    this.panelGameover.matrix = ref.matrix;
+    this.panelGameover.matrixWorld  = ref.matrixWorld ;
+  }
+
+  win() {  //déclenchement de l'animation de fin de partie
+    const ref = new THREE.Object3D();
+    this.camera.root.add(ref);
+    ref.position.set(0,0,-1);
+    ref.rotation.y = Math.PI/2;
+    this.root.parent.add(this.panelEnd);
+    this.panelEnd.matrix = ref.matrix;
+    this.panelEnd.matrixWorld  = ref.matrixWorld ;
   }
 };

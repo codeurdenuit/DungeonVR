@@ -72,8 +72,6 @@ export default class Player {
 
     if (inputs.rightButton1) {
       this.updatePosition(dt, world, camera, soundManager, 1); //déplacement vers l'avant
-    } else if (inputs.rightButton2) {
-      this.updatePosition(dt, world, camera, soundManager, -1); //déplacement vers l'arrière
     } else {
       soundManager.stopWalk(); //la boucle sonore est stoppée
     }
@@ -158,8 +156,8 @@ export default class Player {
     const vectorShieldToMob = new THREE.Vector2(position.x - shieldPos.x, position.z - shieldPos.z);
     const vectorshieldToPlayer = new THREE.Vector2(this.positionCamera.x - shieldPos.x, this.positionCamera.z - shieldPos.z);
     const angle = vectorShieldToMob.cross(vectorshieldToPlayer); //angle entre le vecteur bouclier player et le bouclier mob
-    if (Math.abs(angle) > 0.2) { //si angle faible, alors le bouclier est entre le joueur et le mob
-      this.hp -= 25;
+    if (!this.shield.parent || Math.abs(angle) > 0.2) { //si angle faible, alors le bouclier est entre le joueur et le mob
+      this.hp -= 33;
       if (this.hp > 0) {
         world.startHammer(); //tremblement de la caméra
       } else {

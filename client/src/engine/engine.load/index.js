@@ -4,7 +4,7 @@ import loadTexture from './loadTexture';
 import loadAudio from './loadAudio';
 
 function load(filename) {
-  if ((/\.(jpeg|png)$/i).test(filename)) {
+  if ((/\.(jpg|png)$/i).test(filename)) {
     return loadTexture(filename);
   } else if ((/\.(glb|gltf)$/i).test(filename)) {
     return loadGLTF(filename);

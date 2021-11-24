@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 const itemsConf = [
   { mesh: 'hammer', x: 73.65, y: -12.09, z: -21.11, indexWeapon: 2 },
-  { mesh: 'stick', x: 43, y: -6.40, z: -19.98, indexWeapon: 1 },
+  { mesh: 'stick', x: 43, y: -6.43, z: -19.98, indexWeapon: 1 },
   { mesh: 'sword', x: 71.93, y: -15.94, z: 0.78, indexWeapon: 0 },
   { mesh: 'shield', x: 18.79, y: 0, z: -3.483, indexWeapon: -1 },
   { mesh: 'sword', x: 18.79, y: 0, z: 3.483, indexWeapon: 0 },

@@ -30,7 +30,7 @@ export default class Demo extends engine.View {
 
     this.camera = new Camera(1, 0.5, 2); //instance de la camera
 
-    this.world = new World(assets.level, this.materials); //instance du niveau
+    this.world = new World(assets.level, this.materials, this.camera); //instance du niveau
     this.player = new Player(materialRigid, assets.level, materialInvisible); //instance du joueur
 
     this.mobManager = new MobManager(assets, this.materials, Mob); //gestionnnaire du cycle de vie des instances des mobs
