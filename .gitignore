@@ -1,11 +1,6 @@
-.DS_Store
-.idea
-package-lock.json
-.project
-/storage/
-/textures/
-.strong-pm
-coverage
 node_modules
-npm-debug.log
-/client/.dist/
+.DS_Store
+dist
+dist-ssr
+*.local
+client/build

@@ -9,16 +9,20 @@ J'explique le développement sur https://youtu.be/6Gc-SJBmTzs
 
 - Node
 
-Ce projet est un site statique, le répertoire **.dist** et **assets** peuvent être servis avec d'autres solutions. S3, PHP, etc
+Ce projet est un site statique, le répertoire **dist** peut être servi avec d'autres solutions. S3, PHP, etc
 
 ## Installation
 ```sh
 $ npm install
-$ npm run build
+```
+## Mode développement
+```sh
+$ npm run dev
 ```
 
-## Démarrer le serveur
+## Mode production
 ```sh
+$ npm run build
 $ npm start
 ```
 

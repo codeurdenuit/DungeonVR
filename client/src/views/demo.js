@@ -42,6 +42,8 @@ export default class Demo extends engine.View {
     this.scene.add(this.player.root); //on ajoute l'object 3D player à la scene
 
     this.mobs = []; //liste des instances de mob
+
+    this.soundManager.playTakeWeapon(); 
   }
 
 

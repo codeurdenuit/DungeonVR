@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "fontello";
+  src: url("fontello.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.panel {
+  display: inline-block;
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  padding: 2rem 1rem 2rem 3rem;
+  transform: translate(50%, -50%);
+  background: white;
+  border: solid;
+  font-family: sans-serif;
+  z-index: 3;
+}
+.panel__link {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.logo {
+  margin-bottom: 1rem;
+}
+.icon {
+  font-family: "fontello";
+  font-size: 2rem;
+  text-decoration: none;
+  margin-left: 1rem;
+  vertical-align: middle;
+}
+.icon-twitter-bird:before {
+  content: "\f303";
+  color: #1d9bf0;
+}
+.icon-youtube:before {
+  content: "\f315";
+  color: red;
+}
+.icon-github:before { 
+  content: '\f308';
+  color:black;
+}

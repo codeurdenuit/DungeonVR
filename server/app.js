@@ -1,19 +1,13 @@
-const app = require('express')();
-const express = require('express');
-const http = require('http');
-const path = require('path');
-const config = require('./config');
+import express from 'express';
+const app = express();
+import http from 'http';
+import path from 'path';
 
-app.set('view engine', config.viewEngine);
-app.set('views', config.viewsDirectory);
-app.use('/', express.static(path.normalize('client/.dist')));
-app.use('/assets', express.static(path.normalize('client/assets')));
+app.use('/', express.static(path.normalize('dist')));
 
-
-app.get('/', function (req, res) {
-  res.render('index.ejs');
+const PORT = process.env.PORT || 3000;
+http.createServer(app).listen(PORT, function () {
+  console.info('[Express] server listening on port ' + PORT);
 });
 
-http.createServer(app).listen(config.port, function () {
-  console.info('[Express] server listening on port ' + config.port);
-});
+export const viteNodeApp  = app;

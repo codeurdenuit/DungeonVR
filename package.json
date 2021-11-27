@@ -1,55 +1,23 @@
 {
-  "name": "donjonloop",
+  "name": "donjonvr",
   "version": "1.0.0",
-  "main": "server/app.js",
+  "type": "module",
   "dependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "axios": "^0.23.0",
-    "babel-loader": "^8.1.0",
-    "body-parser": "^1.18.3",
-    "compression": "^1.7.4",
-    "cookie-parser": "^1.4.4",
-    "css-loader": "^2.1.1",
-    "ejs": "^2.6.2",
-    "eslint": "^6.8.0",
-    "express": "^4.16.4",
-    "express-async-errors": "^3.1.1",
-    "extract-loader": "^5.1.0",
-    "file-loader": "^6.2.0",
-    "html-loader": "^0.5.5",
-    "jsonwebtoken": "^8.5.1",
-    "mini-css-extract-plugin": "^0.8.0",
-    "multer": "^1.4.2",
-    "node-sass": "^4.14.1",
-    "nodemailer": "^6.4.2",
-    "nodemon": "^1.18.9",
-    "npm-run-all": "^4.1.5",
-    "sass-loader": "^7.3.1",
-    "three": "^0.133.1",
-    "watch": "^1.0.2",
-    "webpack": "^4.46.0"
+    "express": "^4.17.1",
+    "three": "^0.134.0"
   },
   "scripts": {
-    "dev": "npm-run-all --parallel dev-client dev-server",
-    "dev-client": "webpack --watch",
-    "dev-server": "nodemon --watch server .",
-    "start": "node server/app.js",
-    "build": "webpack --progress --hide-modules",
-    "watch": "node ./textures/watch.js"
+    "dev": "vite",
+    "build": "vite build",
+    "start": "nodemon server/app.js"
   },
-  "author": "",
+  "author": "codeur de nuit",
   "license": "MIT",
-  "nodemonConfig": {
-    "ignore": [
-      "node_modules/*",
-      "client/*"
-    ]
-  },
   "engines": {
-    "node": "10.15.2"
+    "node": "16.13.0"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.12"
+    "vite": "^2.6.14",
+    "vite-plugin-node": "^0.0.15"
   }
 }

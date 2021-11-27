@@ -1,4 +1,4 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 export default function custom() {
 
@@ -27,6 +27,4 @@ export default function custom() {
 
     return instance2;
   }
-
-
 }
