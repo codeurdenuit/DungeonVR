@@ -154,7 +154,7 @@ export default class Player {
 
   hurt(position, world, soundManager) { //le joueur est touché par un mob
     if (this.hp <= 0) return; //un joueur mort ne peut plus être blessé
-    const shieldPos = this.handLeft.position
+    const shieldPos = this.handLeft.position;
     const vectorShieldToMob = new THREE.Vector2(position.x - shieldPos.x, position.z - shieldPos.z);
     const vectorshieldToPlayer = new THREE.Vector2(this.positionCamera.x - shieldPos.x, this.positionCamera.z - shieldPos.z);
     const angle = vectorShieldToMob.cross(vectorshieldToPlayer); //angle entre le vecteur bouclier player et le bouclier mob
@@ -178,4 +178,4 @@ export default class Player {
     const dZ = Math.abs(this.positionVictualCamera.z - target.z);
     return Math.sqrt(dX * dX + dZ * dZ + dY * dY);
   }
-};
+}

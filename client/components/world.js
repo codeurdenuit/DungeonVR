@@ -98,4 +98,4 @@ export default class World {
     this.panelEnd.matrix = ref.matrix;
     this.panelEnd.matrixWorld  = ref.matrixWorld ;
   }
-};
+}

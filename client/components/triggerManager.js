@@ -86,7 +86,7 @@ export default class TriggerManager {
     this.triggers[i].userData.enabled = true;
     this.colliders[i].position.y = 0; //la surface dynamique de déplacement est placée de façon à laisser le joueur passer.
     if(this.animations[i].duration) //si durée d'animation d'ouverture du passage
-     this.animations[i].tempo = this.animations[i].duration;
+      this.animations[i].tempo = this.animations[i].duration;
     if(!this.doors[i]) this.world.win(); //si pas de géométrie, fin de la partie
   }
 
@@ -103,5 +103,4 @@ export default class TriggerManager {
       }
     }
   }
-
-};
+}

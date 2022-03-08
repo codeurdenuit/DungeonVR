@@ -39,8 +39,8 @@ export default class ItemManager {
       }
 
       if(item.visible && item.children[0]) { //rotation des armes visibles
-        item.children[0].rotateY(dt*Math.PI)
+        item.children[0].rotateY(dt*Math.PI);
       }
     }
   }
-};
+}

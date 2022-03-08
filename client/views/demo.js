@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import engine from '../engine';
+import View from '../components/view';
 
 import MaterialMorphSkin from '../materials/materialMorphSkin';
 import MaterialRigid from '../materials/materialRigid';
@@ -7,16 +7,16 @@ import MaterialMorph from '../materials/materialMorph';
 import MaterialInvisible from '../materials/materialInvisible';
 import MaterialPanel from '../materials/materialPanel';
 
-import Camera from '../entities/camera';
-import World from '../entities/world';
-import Player from '../entities/player';
-import Mob from '../entities/mob';
-import MobManager from '../entities/mobManager';
-import TriggerManager from '../entities/triggerManager';
-import SoundManager from '../entities/soundManager';
-import ItemManager from '../entities/itemManager';
+import Camera from '../components/camera';
+import World from '../components/world';
+import Player from '../components/player';
+import Mob from '../components/mob';
+import MobManager from '../components/mobManager';
+import TriggerManager from '../components/triggerManager';
+import SoundManager from '../components/soundManager';
+import ItemManager from '../components/itemManager';
 
-export default class Demo extends engine.View {
+export default class Demo extends View {
 
   init(assets) {
 

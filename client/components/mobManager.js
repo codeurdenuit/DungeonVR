@@ -45,9 +45,5 @@ export default class MobManager {
         i--;
       }
     }
-
-
-
   }
-
-};
+}

@@ -1,6 +1,6 @@
 {
   "name": "dungeonvr",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "dependencies": {
     "express": "^4.17.1",

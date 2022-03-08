@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { VRButton } from './/engine.plugin/vr-threejs';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 
 class View {
 
@@ -17,12 +17,12 @@ class View {
       leftButton2: false,
       rightButton1: false,
       rightButton2: false
-    }
+    };
     this._contollers = {
       leftPreviousPos: new THREE.Vector3(),
       rightPreviousPos: new THREE.Vector3(),
       weaponPreviousPos: new THREE.Vector3(),
-    }
+    };
   }
 
   async start(assets, config) {
@@ -70,7 +70,7 @@ class View {
         if (this.weaponSpeedList.length > 5) this.weaponSpeedList.shift(); //Jamais plus de 5
         weaponSpeed = this.weaponSpeedList.reduce(reducer) / this.weaponSpeedList.length;
 
-        const weaponAcc = (weaponSpeed - this.controllerRight.userData.weaponSpeed) //accélération de l'arme pour cette frame
+        const weaponAcc = (weaponSpeed - this.controllerRight.userData.weaponSpeed); //accélération de l'arme pour cette frame
         this.controllerRight.userData.weaponSpeed = weaponSpeed;
         this.controllerRight.userData.weaponAcc = weaponAcc;
         this._contollers.weaponPreviousPos.copy(weaponPos);
@@ -161,5 +161,29 @@ class View {
   }
 
 }
+
+////////////////FIX////////////////////////////
+THREE.Skeleton.prototype.clone = function () {
+  const instance = new THREE.Skeleton();
+  instance.bones = this.bones.map(bone => {
+    const boneClone = new bone.constructor().copy(bone, false);
+    boneClone.rotation.copy(bone.rotation);
+    return boneClone;
+  });
+  instance.bones.forEach(bone => {
+    const sourceBone = this.getBoneByName(bone.name);
+    const parentName = sourceBone.parent.name;
+    const parentBone = instance.getBoneByName(parentName);
+    if (parentBone) {
+      parentBone.add(bone);
+    }
+  });
+  const instance2 = new THREE.Skeleton(instance.bones);
+  //fix
+  instance2.bones.forEach(b => {
+    b.updateWorldMatrix();
+  });
+  return instance2;
+};
 
 export default View;

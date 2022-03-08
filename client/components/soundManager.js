@@ -55,7 +55,6 @@ export default class SoundManager {
     if (this.playerMob.isPlaying)
       this.playerMob.stop();
     const buffer = this.buffersCutMob[Math.floor(Math.random() * this.buffersCutMob.length)];
-    console.log(buffer)
     this.playerMob.setBuffer(buffer);
     this.playerMob.play();
   }
@@ -101,5 +100,4 @@ export default class SoundManager {
     if (!this.playerWalk.isPlaying) return;
     this.playerWalk.stop();
   }
-
-};
+}

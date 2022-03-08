@@ -16,4 +16,4 @@ export default class Camera {
   getPositionZ() {
     return this.root.matrixWorld.elements[14]; //la camera est déplacée par le casque VR, on récupère la position absolue de l'axe Z
   }
-};
+}

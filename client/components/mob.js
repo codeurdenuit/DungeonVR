@@ -13,7 +13,7 @@ const bodyparts = {
   arm_r: { asset: 'bodypart_arm', origin: 'upper_arm_r', scaleX: 1, dirX: -1, dirY: -0.5 },
   leg_l: { asset: 'bodypart_leg', origin: 'shin_l', scaleX: -1, dirX: 1, dirY: 0 },
   leg_r: { asset: 'bodypart_leg', origin: 'shin_r', scaleX: 1, dirX: -1, dirY: 0 },
-}
+};
 
 const boneMap = {
   'spine03': { anim: 'hurthead', morph: [6], bodyparts: ['head'] },
@@ -29,7 +29,7 @@ const boneMap = {
   'shin_l': { anim: 'hurtlegl', morph: [3], bodyparts: ['leg_l'] },
   'thigh_r': { anim: 'hurtlegr', morph: [2], bodyparts: ['leg_r'] },
   'shin_r': { anim: 'hurtlegr', morph: [2], bodyparts: ['leg_r'] }
-}
+};
 
 export default class Mob {
 
@@ -77,7 +77,7 @@ export default class Mob {
     this.worldPosition = new THREE.Vector3(); //position du peronnage dans l'espace absolu
     this.rotation = 0; //orientation du mob
 
-    this.tempo = 0 //variable utilisée pour décompter les durées d'animation ou d'états
+    this.tempo = 0; //variable utilisée pour décompter les durées d'animation ou d'états
 
     this.blinded = false; //si le mob n'as plus tête, son comportement change
     this.isDead = false; //indicateur de l'état de vie du mob
@@ -152,7 +152,7 @@ export default class Mob {
     this.colliders[indexBone].userData.hp -= damage; //on retrir des points de vie du collider touché
     if (this.colliders[indexBone].userData.hp <= 0) { //si collider HS
       soundManager.playCutmob(); //bruitage du démembrement
-      this.startAnimationBodyPart(boneName, direction, speed) //on déclenche l'animation de démembrement 
+      this.startAnimationBodyPart(boneName, direction, speed); //on déclenche l'animation de démembrement 
       if (boneName === 'spine03') { //si l'os touché correspond à la tête du mob
         this.blinded = true; //le mob est aveugle. 
         this.speedWalk = 0; //le mob ne peux plus se déplacer
@@ -170,19 +170,19 @@ export default class Mob {
 
     if (!this.isDead) //si le mob est HS, on arrete les processus de comportement. 
       switch (this.behviour) {
-        case RANDOM:
-          this.updateRandom(dt); //processus du comportement aléatoire
-          break;
-        case FOCUS:
-          this.updateFocus(dt, player); //processus de déplacement vers le joueur
-          break;
-        case ATTACK:
-          this.updateAttack(dt, player, world, soundManager);  //processus d'attaque
-          break;
-        case HURT:
-          this.updateHurt(dt, player); //processus de blessure
-          break;
-        default:
+      case RANDOM:
+        this.updateRandom(dt); //processus du comportement aléatoire
+        break;
+      case FOCUS:
+        this.updateFocus(dt, player); //processus de déplacement vers le joueur
+        break;
+      case ATTACK:
+        this.updateAttack(dt, player, world, soundManager);  //processus d'attaque
+        break;
+      case HURT:
+        this.updateHurt(dt, player); //processus de blessure
+        break;
+      default:
       }
 
     this.updatePosition(dt, world, mobs); //déplacement de la géométrie du mob
@@ -267,7 +267,7 @@ export default class Mob {
     }
   }
 
-  updateHurt(dt, player) { //si le mob est en train de subir une blessure 
+  updateHurt() { //si le mob est en train de subir une blessure 
     //Rien pour le moment
   }
 
@@ -293,7 +293,7 @@ export default class Mob {
 
     this.root.updateWorldMatrix(); //mise à jour de la matrice world pour récupérer la position absolue
     this.worldPosition.setFromMatrixPosition(this.root.matrixWorld); //mise a jour de la position absolue
-    this.worldPosition.y += 0.5 //offest for raycaseter
+    this.worldPosition.y += 0.5; //offest for raycaseter
     this.raycasterBody.set(this.worldPosition, new THREE.Vector3(0, -1, 0)); //mise a jour du raycaster avec la nouvelle position absolue
     const col = this.raycasterBody.intersectObject(world.colliderMaster); //détection de la collision avec le sol
 
@@ -317,7 +317,7 @@ export default class Mob {
       const partName = parts[i];
       const origin = bodyparts[partName].origin; //L'os d'où part le mesh à animer
       const dirX = bodyparts[partName].dirX; //direction de l'animation
-      const dirY = bodyparts[partName].dirY
+      const dirY = bodyparts[partName].dirY;
       const partMesh = this.bodyParts[partName]; //mesh à animer
       if (partName === 'body_l') { //plus de corps
         this.mesh.visible = false; //le mob est détruit, il n'est plus visible, mauvaise pratique, l'animation ne doit pas contenir un code de fonctionnalité
@@ -326,7 +326,7 @@ export default class Mob {
       if (!partMesh) continue; //si déjà animé
       const bone = this.skeleton.getBoneByName(origin); //on récupère l'os d'où commence la trajectoire
       const positionWorld = bone.getWorldPosition(new THREE.Vector3()); //on récupère sa position dans le repère absolu
-      const rotationWorld = bone.getWorldDirection(new THREE.Vector3()) //on récupère sa rotation dans le repère absolu
+      const rotationWorld = bone.getWorldDirection(new THREE.Vector3()); //on récupère sa rotation dans le repère absolu
       const positionInLevel = this.root.parent.worldToLocal(positionWorld); //on calcule cette position dans le repère du niveau (c'est le niveau qui se déplace et non le joueur)
       const directionRelative = direction.clone(); //on ne doit pas modifier l'object réference qui indique la direction
       directionRelative.z += -2; //la trajectoire doit reculer derrière le mob (design)
@@ -373,9 +373,9 @@ export default class Mob {
     for (let i = 0; i < this.animedBlood.length; i++) { //pour chaque animation
       const anim = this.animedBlood[i];
       if (anim.tempo > 0) { //tant que l'animation n'est pas terminée, on continue le processus d'animation
-        const progress = 1 - anim.tempo / anim.duration //progression de 0 à 1;
+        const progress = 1 - anim.tempo / anim.duration; //progression de 0 à 1;
         const horizontalProgress = 1 - (1 - progress) * (1 - progress); //0 to 1 (1-x)²
-        const verticalProgress = progress * progress //x² 
+        const verticalProgress = progress * progress; //x² 
         anim.mesh.morphTargetInfluences[0] = horizontalProgress; //animation morphing pour l'axe horizontal 
         anim.mesh.morphTargetInfluences[1] = verticalProgress; //animation morphing pour l'axe vertical 
         anim.tempo -= dt;
@@ -387,7 +387,7 @@ export default class Mob {
     }
   }
 
-  checkLife(dt) {
+  checkLife() {
     if (this.isDead) {  //si le mob est éliminé
       if (!this.animedParts.length && !this.animedBlood.length) { //si toutes les animations sont terminées
         this.root.clear(); //le mesh du mob est effacé de la scène
@@ -408,5 +408,4 @@ export default class Mob {
     const angle = tragetVector.cross(dirVector);
     return angle > 0 ? 1 : -1;
   }
-
-};
+}
