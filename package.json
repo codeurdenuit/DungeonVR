@@ -1,6 +1,6 @@
 {
-  "name": "donjonvr",
-  "version": "1.0.0",
+  "name": "dungeonvr",
+  "version": "1.0.1",
   "type": "module",
   "dependencies": {
     "express": "^4.17.1",

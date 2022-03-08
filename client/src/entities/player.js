@@ -106,9 +106,11 @@ export default class Player {
 
 
   updatePosition(dt, world, eye, soundManager, way) { //simulation du déplacement du joueur
-    this.direction.x = this.handRight.position.x - eye.getPositionX(); //direction de déplacement en fonction de la positon de la main droite par rapport au regard
-    this.direction.z = this.handRight.position.z - eye.getPositionZ();
-    const power = this.direction.length() / 0.7;
+    this.handRight.getWorldDirection(this.direction);//La main droite donne la direction du déplacement
+    this.direction.negate();
+    this.direction.y = 0;
+    const power = eye.root.position.distanceTo( this.handRight.position ) / 0.7;
+
     const distance = way * this.walkSeed * dt * power; //distance parcourue
     distance > 0.001 ? soundManager.playWalk(power) : soundManager.stopWalk();
     this.direction.normalize(); //normalisaition du vecteur

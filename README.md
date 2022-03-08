@@ -4,7 +4,6 @@ Ce projet est un jeu VR exécutable sur navigateur web.
 Il est développé avec threeJS.
 J'explique le développement sur https://youtu.be/6Gc-SJBmTzs
 
-
 ## Environnement 
 
 - Node

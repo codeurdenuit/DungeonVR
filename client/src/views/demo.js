@@ -5,6 +5,7 @@ import MaterialMorphSkin from '../materials/materialMorphSkin';
 import MaterialRigid from '../materials/materialRigid';
 import MaterialMorph from '../materials/materialMorph';
 import MaterialInvisible from '../materials/materialInvisible';
+import MaterialPanel from '../materials/materialPanel';
 
 import Camera from '../entities/camera';
 import World from '../entities/world';
@@ -25,8 +26,9 @@ export default class Demo extends engine.View {
     const materialRigid = new MaterialRigid(assets); //material pour le décor et le joueur
     const materialMorph = new MaterialMorph(assets); //material pour les impacts
     const materialInvisible = new MaterialInvisible(); //material pour les colliders
+    const materialPanel = new MaterialPanel(assets); //material pour les textes explicatifs
 
-    this.materials = { materialMorphSkin, materialRigid, materialMorph, materialInvisible };
+    this.materials = { materialMorphSkin, materialRigid, materialMorph, materialInvisible, materialPanel };
 
     this.camera = new Camera(0, 1.3, 0, new THREE.Vector3(10,1.3,0)); //instance de la camera
 

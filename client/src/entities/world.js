@@ -33,9 +33,9 @@ export default class World {
     this.deadTempo = 0; //progression de l'animation de fin de partie
 
     //J'ajoute ca à l'arrache, c'est très sale XD
-    this.panelTuto =  new THREE.Mesh(asset.panel1.geometry, materials.materialRigid.material);
-    this.panelGameover =  new THREE.Mesh(asset.panel2.geometry, materials.materialRigid.material);
-    this.panelEnd =  new THREE.Mesh(asset.panel3.geometry, materials.materialRigid.material);
+    this.panelTuto =  new THREE.Mesh(asset.panel1.geometry, materials.materialPanel.material);
+    this.panelGameover =  new THREE.Mesh(asset.panel2.geometry, materials.materialPanel.material);
+    this.panelEnd =  new THREE.Mesh(asset.panel3.geometry, materials.materialPanel.material);
     this.panelTuto.position.set( 2.0, 1.5, 0 );
     this.root.add( this.panelTuto );
     this.camera = camera;
